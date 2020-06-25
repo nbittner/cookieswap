@@ -5,16 +5,19 @@ import requests
 import pandas as pd
 import numpy as np
 import re
+import random
 
+# USAGE: This code can be used to scrape a set of known URLS (with a user submitted file as INFILE) or
+# can generate a set of random users (through a number provided by the user)
 INFILE = input('Path to URL list: ')
+INRAND = input('Number of random participants to scrape: ')
 CODE = input('Treatment code: ')
 OUTFILE = input('Outfile name (ends in .csv): ')
 try:
-    INFILE = True
     CODE = int(CODE)
     OUTFILE = True
 except:
-    print('Error. Please check inputs.')
+    print('Error. Please check treatment code or outfile name.')
     quit()
 
 treatments = []
@@ -28,9 +31,20 @@ followers = []
 cws = []
 cfs = []
 tks = []
-FILE = open(INFILE)
-#FILE = open("../2016_2019.txt")
-LINES = FILE.readlines()
+if INFILE:
+    FILE = open(INFILE)
+    #FILE = open("../2016_2019.txt")
+    LINES = FILE.readlines()
+elif INRAND:
+    INRAND = int(INRAND)
+    LINES = []
+    for i in range(INRAND):
+        n = random.randint(1,2040455)
+        y = 'https://food52.com/users/' + str(n)
+        LINES.append(str(y))
+    #LINES = rand.readlines()
+else:
+    print('Input Error. Check input file or random number.')
 for LINE in LINES:
     result = requests.get(LINE)
     if result.status_code == 200:
